@@ -142,7 +142,13 @@ class Fluent::Cloudfront_LogInput < Fluent::Input
       line = line.split("\t")
       record = Hash[@fields.collect.zip(line)]
       timestamp = Time.parse("#{record['date']}T#{record['time']}+00:00").to_i
+      #sanitize
+      record['cs-uri-stem'] = record['cs-uri-stem'].gsub!(/[^0-9A-Za-z.:,\(\)\s;\-\/]/, '_')
+      record['x-forwarded-for'] = record['x-forwarded-for'].gsub!(/[^0-9A-Za-z.,:\(\)\s;\-\/]/, '_')
+      record['cs(User-Agent)'] = record['cs(User-Agent)'].gsub!(/[^0-9A-Za-z.,:\(\)\s;\-\/]/, '_')
+      record['cs(Referer)'] = record['cs(Referer)'].gsub!(/[^0-9A-Za-z.,:\(\)\s;\-\/]/, '_')
       router.emit(@tag, timestamp, record)
+
     end
     purge(filename)
   end
