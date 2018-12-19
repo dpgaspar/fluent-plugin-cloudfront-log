@@ -1,0 +1,8 @@
+{
+    "rules": [{
+        "notifications": [{
+            "address" : "devops@miniclip.com",
+						"includeDiff": true
+        }]
+    }]
+}
